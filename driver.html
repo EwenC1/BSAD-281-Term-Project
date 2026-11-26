@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Create an ANTI-Walk driver profile for Antigonish." />
+    <meta name="theme-color" content="#f5f6f1" />
+    <title>Drive with us — ANTI-Walk</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="driver.css" />
+  </head>
+  <body>
+    <div class="app-shell driver-app">
+      <header class="topbar">
+        <a class="brand" href="index.html" aria-label="ANTI-Walk home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 36 36" fill="none">
+              <path d="M18 3.5 31 11v14L18 32.5 5 25V11L18 3.5Z" fill="currentColor" />
+              <path d="m18 10 2.25 6.2L26 18l-5.75 1.8L18 26l-2.25-6.2L10 18l5.75-1.8L18 10Z" fill="#F5F6F1" />
+            </svg>
+          </span>
+          <span class="brand-name">ANTI-<span>Walk</span></span>
+          <span class="brand-location">ANTIGONISH, NS</span>
+        </a>
+        <nav class="driver-nav" aria-label="Main navigation">
+          <a href="index.html">← Back to rides</a>
+          <span>Driver application</span>
+        </nav>
+      </header>
+
+      <main class="driver-main">
+        <section class="driver-intro">
+          <span class="driver-eyebrow"><span class="live-dot"></span> MAKE A LITTLE ROOM FOR GOOD</span>
+          <h1>Drive your town<br /><span>forward.</span></h1>
+          <p>Meet your neighbours, choose the rides that work for you, and help Antigonish get where it's going.</p>
+          <div class="driver-benefits">
+            <span><b>01</b> Set your own availability</span>
+            <span><b>02</b> Meet local riders</span>
+            <span><b>03</b> Build a profile that's you</span>
+          </div>
+          <div class="driver-safety-card">
+            <span class="safety-icon" aria-hidden="true">✳</span>
+            <span><strong>Safety comes first.</strong><small>Driver verification, insurance, and payment systems are not connected in this demo. Don't submit real personal or vehicle details.</small></span>
+          </div>
+        </section>
+
+        <section class="driver-builder" aria-labelledby="driver-form-heading">
+          <div class="builder-heading">
+            <span class="section-kicker">YOUR DRIVER PROFILE</span>
+            <h2 id="driver-form-heading">Let's get to know you.</h2>
+            <p>Build a profile riders can feel good about meeting.</p>
+          </div>
+
+          <form id="driver-form">
+            <fieldset class="driver-form-section">
+              <legend><span>1</span> A bit about you</legend>
+              <div class="driver-form-grid">
+                <label class="driver-field">Name riders will see
+                  <input id="driver-name" name="name" autocomplete="name" placeholder="e.g. Alex" required maxlength="50" />
+                </label>
+                <label class="driver-field">Email
+                  <input id="driver-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required maxlength="120" />
+                </label>
+                <label class="driver-field">Phone
+                  <input id="driver-phone" name="phone" type="tel" autocomplete="tel" placeholder="(902) 555-0123" required maxlength="30" />
+                </label>
+                <label class="driver-field">Where do you usually drive?
+                  <select id="driver-area" name="area">
+                    <option>Antigonish Town</option>
+                    <option>Antigonish County</option>
+                    <option>Antigonish &amp; Paqtnkek</option>
+                    <option>Antigonish, campus &amp; county</option>
+                  </select>
+                </label>
+                <label class="driver-field full-field">A few words about you
+                  <textarea id="driver-bio" name="bio" rows="3" maxlength="180" placeholder="Tell riders what makes your trips a little more comfortable."></textarea>
+                  <small class="character-count"><span id="bio-count">0</span>/180</small>
+                </label>
+              </div>
+            </fieldset>
+
+            <fieldset class="driver-form-section">
+              <legend><span>2</span> Your vehicle</legend>
+              <div class="driver-form-grid">
+                <label class="driver-field">Vehicle
+                  <input id="driver-vehicle" name="vehicle" placeholder="e.g. Toyota Corolla" required maxlength="60" />
+                </label>
+                <label class="driver-field">Year
+                  <input id="driver-year" name="year" type="number" min="1990" max="2035" inputmode="numeric" placeholder="2022" required />
+                </label>
+                <label class="driver-field">Colour
+                  <input id="driver-colour" name="colour" placeholder="e.g. Dark blue" required maxlength="30" />
+                </label>
+                <label class="driver-field">Passenger seats
+                  <select id="driver-seats" name="seats">
+                    <option value="1">1 seat</option>
+                    <option value="2">2 seats</option>
+                    <option value="3" selected>3 seats</option>
+                    <option value="4">4 seats</option>
+                    <option value="5">5 seats</option>
+                    <option value="6">6 seats</option>
+                  </select>
+                </label>
+              </div>
+              <p class="form-help">Vehicle details are for your local preview only. Never enter a licence or registration number here.</p>
+            </fieldset>
+
+            <fieldset class="driver-form-section">
+              <legend><span>3</span> Make it yours</legend>
+              <div class="driver-form-grid">
+                <label class="driver-field full-field">Profile photo <span class="optional-label">OPTIONAL</span>
+                  <input id="driver-photo" name="photo" type="file" accept="image/*" />
+                  <small class="form-help">Previewed in your browser only. Image isn't uploaded.</small>
+                </label>
+                <div class="driver-field full-field">
+                  <span class="field-title">What can riders expect?</span>
+                  <div class="preference-options">
+                    <label><input type="checkbox" name="preferences" value="Quiet rides welcome" /> Quiet rides welcome</label>
+                    <label><input type="checkbox" name="preferences" value="Happy to chat" /> Happy to chat</label>
+                    <label><input type="checkbox" name="preferences" value="Pet-friendly" /> Pet-friendly</label>
+                  </div>
+                </div>
+                <label class="availability-setting full-field">
+                  <input id="driver-available" type="checkbox" checked />
+                  <span><strong>Show me as available</strong><small>Switch this off any time in your profile preview.</small></span>
+                </label>
+              </div>
+            </fieldset>
+
+            <label class="local-storage-consent">
+              <input id="local-save-consent" type="checkbox" required />
+              <span>I understand this demo saves my profile information only in this browser on this device. Nothing is submitted to a rideshare service.</span>
+            </label>
+            <button type="submit" class="create-profile-button">
+              <span>Build my profile</span><span aria-hidden="true">↗</span>
+            </button>
+            <p class="driver-save-status" id="driver-save-status" role="status" aria-live="polite">Your profile preview updates as you type. Save it here to keep it on this device.</p>
+          </form>
+        </section>
+
+        <aside class="driver-preview-column" aria-label="Live driver profile preview">
+          <div class="preview-sticky">
+            <div class="preview-heading">
+              <span class="section-kicker">THE RIDER'S VIEW</span>
+              <h2>Your profile, in good company.</h2>
+            </div>
+            <article class="driver-profile-card" id="driver-profile-card">
+              <div class="profile-cover">
+                <span>ANTIGONISH, NOVA SCOTIA</span>
+                <span class="profile-stars" aria-label="New driver">✳</span>
+              </div>
+              <div class="driver-avatar" id="driver-avatar">
+                <span id="avatar-initial">?</span>
+                <img id="avatar-image" alt="Driver profile preview" hidden />
+              </div>
+              <div class="profile-body">
+                <div class="profile-name-row">
+                  <h3 id="preview-name">Your name</h3>
+                  <span class="availability-pill" id="availability-pill"><span></span> Available</span>
+                </div>
+                <p class="profile-location" id="preview-area">Antigonish Town · Local driver</p>
+                <p class="preview-bio" id="preview-bio">A short introduction helps riders know who they'll be meeting.</p>
+                <div class="profile-detail-list">
+                  <div><span class="detail-icon">⌁</span><span><small>YOUR RIDE</small><strong id="preview-vehicle">Vehicle details</strong></span></div>
+                  <div><span class="detail-icon">♧</span><span><small>ROOM FOR</small><strong id="preview-seats">3 passengers</strong></span></div>
+                </div>
+                <div class="profile-preferences" id="preview-preferences"><span>New neighbour</span></div>
+                <div class="profile-card-footer"><span>Community driver</span><span>ANTI-Walk <b>✳</b></span></div>
+              </div>
+            </article>
+            <div class="preview-saved" id="preview-saved" hidden>
+              <span aria-hidden="true">✓</span> Profile saved on this device
+            </div>
+          </div>
+        </aside>
+      </main>
+      <footer class="site-footer">
+        <span>© 2026 ANTI-Walk · Antigonish, Nova Scotia</span>
+        <a href="index.html">Back to book a ride ↗</a>
+      </footer>
+    </div>
+    <script src="driver.js"></script>
+  </body>
+</html>
