@@ -1,11 +1,10 @@
 # PROJECT LOG
+### Session 1 -- Nov 26 -- driver: Ewen
 
-## 1. Header
-
-## 2. Work Sessions
-
-## 3. Things That Broke
-
-## 4. What a Real Version Would Need
-
-## 5. Reflection
+- Goal for this session:
+- Key prompts I gave Copilot:
+  1.
+  2.
+- What worked:
+- What broke, and how I fixed it:
+- Committed? yes/no 
