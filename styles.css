@@ -159,6 +159,8 @@ h1 span { color: #34383a; }
 .map-live { padding: 0; color: #555; font-size: 9px; }
 .active-driver-counter { display: inline-flex; align-items: center; gap: 5px; color: #555; font-size: 9px; }
 .active-driver-counter strong { color: #34383a; font-size: 12px; }
+.active-driver-wait { margin-left: 4px; padding-left: 8px; border-left: 1px solid #ddd; }
+.active-driver-wait strong { font-size: inherit; }
 .active-driver-counter small { padding: 3px 5px; border-radius: 2px; color: #777; background: #eee; font-size: 7px; }
 .active-driver-dot { width: 7px; height: 7px; border-radius: 50%; background: #555b5e; }
 .map-topline-actions { display: flex; gap: 6px; }
