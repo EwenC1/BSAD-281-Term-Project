@@ -27,3 +27,11 @@
 - What worked:Making the map more accurate worked on the first time trying 
 - What broke, and how I fixed it: When I was adding the more relevent highlighted locations they were a different colour and style than the previously exsisting ones. I just made it match the exsisting ones
 - Committed? yes
+
+### Things that broke
+Date      What Went Wrong:            What I tried:                            What Fixed it:
+NOV 25    Clicking the Icons          I tried to get the AI to use a           I asked the AI to reference google
+          on the map didnt update     different map rather than Google         maps and make its own map
+          the travel details          maps, one that didnt require an API 
+                                      to function. The map it tried to use 
+                                      instead wouldn't load on the website
