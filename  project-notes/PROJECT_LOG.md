@@ -1,6 +1,10 @@
 # PROJECT LOG
 
-Ewen Cameron, ANTI-WALK, Link - https://cautious-broccoli-wv47r7ww99xx39qq-5504.app.github.dev/
+**Ewen Cameron**
+**ANTI-WALK**
+**https://cautious-broccoli-wv47r7ww99xx39qq-5504.app.github.dev/**
+
+## Work sessions
 
 ### Session 1 -- Nov 25 -- driver: Ewen
 
@@ -31,7 +35,7 @@ Ewen Cameron, ANTI-WALK, Link - https://cautious-broccoli-wv47r7ww99xx39qq-5504.
 - What broke, and how I fixed it: When I was adding the more relevent highlighted locations they were a different colour and style than the previously exsisting ones. I just made it match the exsisting ones
 - Committed? yes
 
-### Things that broke
+## Things that broke
 Date      What Went Wrong:            What I tried:                            What Fixed it:
 NOV 25    Clicking the Icons          I tried to get the AI to use a           I asked the AI to reference google
           on the map didnt update     different map rather than Google         maps and make its own map
@@ -39,7 +43,7 @@ NOV 25    Clicking the Icons          I tried to get the AI to use a           I
                                       to function. The map it tried to use 
                                       instead wouldn't load on the website
 
-### What A Real Company Needs
+## What A Real Company Needs
 Feature skipped or faked:             Why A Real Company Needs It:             How Hard/Expensive:
 Real number of active drivers
 Proper Payment Processing
@@ -47,4 +51,4 @@ Live GPS to track Drivers
 Calculated pricing & Fees
 Database that stores driver info
 
-### Reflection
+## Reflection
