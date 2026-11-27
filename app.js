@@ -4,10 +4,14 @@ const places = {
   "st. martha's regional hospital": { label: "St. Martha's", key: "hospital", x: 546.5, y: 296.1, km: 1.5 },
   "antigonish mall": { label: "The Mall", key: "mall", x: 547.3, y: 422.4, km: 1.5 },
   "antigonish market square": { label: "Market Square", key: "market", x: 528, y: 397.5, km: 1.4 },
-  "antigonish landing": { label: "Antigonish Landing", key: "landing", x: 663.8, y: 259.5, km: 3.1 },
+  "main street, antigonish, ns": { label: "Main Street", key: "main-street", x: 480, y: 354, km: 0.7 },
+  "antigonish golf & country club": { label: "Golf Course", key: "golf-course", x: 374.9, y: 211.4, km: 2.4 },
+  "antigonish landing": { label: "Antigonish Landing", key: "landing", x: 663.8, y: 239.5, km: 3.1 },
   "pomquet beach": { label: "Pomquet Beach", key: "pomquet", x: 1860.3, y: 110.7, km: 20 },
   "paqtnkek mi'kmaw nation": { label: "Paqtnkek", key: "paqtnkek", x: 1871.4, y: 654.5, km: 18 },
   "mcdonald's": { label: "McDonald's", key: "mcdonalds", x: 393.4, y: 430.1, km: 1.4 },
+  "main street": { label: "Main Street", key: "main-street", x: 480, y: 354, km: 0.7 },
+  "antigonish golf & country club": { label: "Golf Course", key: "golf-course", x: 374.9, y: 211.4, km: 2.4 },
   "pita pit": { label: "Pita Pit", key: "pita-pit", x: 386, y: 433, km: 1.5 },
   "subway": { label: "Subway", key: "subway", x: 382, y: 436, km: 1.6 },
   "a&w": { label: "A&W", key: "a-and-w", x: 376, y: 440, km: 1.8 },
@@ -18,6 +22,8 @@ const mapPlaceValues = {
   hospital: "St. Martha's Regional Hospital",
   mall: "Antigonish Mall",
   market: "Antigonish Market Square",
+  "main-street": "Main Street, Antigonish, NS",
+  "golf-course": "Antigonish Golf & Country Club",
   landing: "Antigonish Landing",
   mcdonalds: "McDonald's, 37 James Street, Antigonish, Nova Scotia",
   "pita-pit": "Pita Pit, James Street, Antigonish, Nova Scotia",
@@ -75,6 +81,8 @@ let selectedMembership = "Community";
 function findPlace(value) {
   const normalized = value.trim().toLocaleLowerCase();
   if (normalized.includes("mcdonald")) return places["mcdonald's"];
+  if (normalized.includes("main street")) return places["main street"];
+  if (normalized.includes("golf")) return places["antigonish golf & country club"];
   return places[normalized] ?? null;
 }
 

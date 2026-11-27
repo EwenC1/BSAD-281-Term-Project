@@ -94,6 +94,8 @@
                   <option value="St. Martha's Regional Hospital"></option>
                   <option value="Antigonish Mall"></option>
                   <option value="Antigonish Market Square"></option>
+                  <option value="Main Street, Antigonish, NS"></option>
+                  <option value="Antigonish Golf &amp; Country Club"></option>
                   <option value="Antigonish Landing"></option>
                   <option value="Pomquet Beach"></option>
                   <option value="Paqtnkek Mi'kmaw Nation"></option>
@@ -270,6 +272,8 @@
                   <button type="button" class="local-map-place" data-local-place="St. Martha's Regional Hospital">St. Martha's Hospital</button>
                   <button type="button" class="local-map-place" data-local-place="Antigonish Mall">Antigonish Mall</button>
                   <button type="button" class="local-map-place" data-local-place="Antigonish Market Square">Market Square</button>
+                  <button type="button" class="local-map-place" data-local-place="Main Street, Antigonish, NS">Main Street</button>
+                  <button type="button" class="local-map-place" data-local-place="Antigonish Golf &amp; Country Club">Golf Course</button>
                 </div>
               </div>
             </div>
@@ -291,15 +295,20 @@
                 </filter>
               </defs>
               <image href="antigonish-map.svg" x="0" y="0" width="900" height="760" preserveAspectRatio="none" aria-hidden="true" />
-              <g class="map-place" data-map-place="town">
-                <circle cx="483.8" cy="365.4" r="10" fill="#FCFDF9" />
-                <circle cx="483.8" cy="365.4" r="4" fill="#657A6C" />
-                <text x="504.8" y="369.4">TOWN CENTRE</text>
-              </g>
               <g class="map-place" data-map-place="stfx">
                 <circle cx="470.3" cy="406.8" r="11" fill="#DAE8D2" />
                 <path d="M470.3 398.8 472.8 404.3l6.5 2.5-6.5 2.5-2.5 6.5-2.5-6.5-6.5-2.5 6.5-2.5 2.5-5.5Z" fill="#426B4D" />
                 <text x="444" y="410.8" text-anchor="end">STFX</text>
+              </g>
+              <g class="map-place" data-map-place="golf-course">
+                <circle cx="375" cy="211" r="12" fill="#DAE8D2" stroke="#537A55" stroke-width="1.5" />
+                <path d="M375 203v16m0-16 8 2.5-8 2.5" fill="none" stroke="#426B4D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                <text x="396" y="215">GOLF COURSE</text>
+              </g>
+              <g class="map-place" data-map-place="main-street">
+                <circle cx="480" cy="354" r="10" fill="#DAE8D2" stroke="#537A55" stroke-width="1.5" />
+                <path d="M480 348v12m-6-6h12" stroke="#426B4D" stroke-width="1.8" stroke-linecap="round" />
+                <text x="461" y="343" text-anchor="end">MAIN STREET</text>
               </g>
               <g class="map-place" data-map-place="hospital">
                 <circle cx="546.5" cy="296.1" r="10" fill="#F8E8D8" />
@@ -318,14 +327,9 @@
                 <path d="M545.3 420.4h1.5v1.5h-1.5zm2.5 0h1.5v1.5h-1.5zm-2.5 2.5h1.5v1.5h-1.5zm2.5 0h1.5v1.5h-1.5z" fill="#F5F6F1" />
                 <text x="570" y="447">ANTIGONISH MALL</text>
               </g>
-              <g class="map-place" data-map-place="market">
-                <circle cx="528" cy="397.5" r="6" fill="#F5E9BF" />
-                <path d="M524.5 397.5h7v3.5h-7zM524 395.8h8.5l-1.5 1.7h-5.5l-1.5-1.7Z" fill="#947D38" />
-                <text x="550" y="386">MARKET SQUARE</text>
-              </g>
               <g class="map-place" data-map-place="landing">
-                <circle cx="663.8" cy="259.5" r="8" fill="#DAE8D2" />
-                <path d="M658.8 260.5c2-2.5 3.5-2.5 5 0s3.5 2.5 5 0" fill="none" stroke="#537A55" stroke-width="1.5" />
+                <circle cx="663.8" cy="239.5" r="10" fill="#DAE8D2" stroke="#537A55" stroke-width="1.5" />
+                <path d="M656.8 240.5c2-2.5 4-2.5 7 0s5 2.5 7 0m-12-4h10" fill="none" stroke="#537A55" stroke-width="1.5" />
               </g>
               <path id="route-shadow" d="M483.8 365.4 L470.3 406.8" fill="none" stroke="#FAFCF7" stroke-width="13" stroke-linecap="round" />
               <path id="route-line" d="M483.8 365.4 L470.3 406.8" fill="none" stroke="#2E7955" stroke-width="5" stroke-linecap="round" stroke-dasharray="7 7" />
@@ -375,6 +379,8 @@
                 <option value="St. Martha's Regional Hospital">St. Martha's Hospital</option>
                 <option value="Antigonish Mall">Antigonish Mall</option>
                 <option value="Antigonish Market Square">Market Square</option>
+                <option value="Main Street, Antigonish, NS">Main Street</option>
+                <option value="Antigonish Golf &amp; Country Club">Golf Course</option>
                 <option value="Antigonish Landing">Antigonish Landing</option>
               </select>
               <div class="map-pick-instruction" id="map-pick-instruction">Choose a place below to set the drop-off.</div>
