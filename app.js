@@ -80,10 +80,9 @@ let selectedMembership = "Community";
 
 function findPlace(value) {
   const normalized = value.trim().toLocaleLowerCase();
-  if (normalized.includes("mcdonald")) return places["mcdonald's"];
-  if (normalized.includes("main street")) return places["main street"];
-  if (normalized.includes("golf")) return places["antigonish golf & country club"];
-  return places[normalized] ?? null;
+  if (places[normalized]) return places[normalized];
+  const placeName = Object.keys(places).find((name) => normalized.includes(name));
+  return placeName ? places[placeName] : null;
 }
 
 function getLocationForInput(input) {
@@ -118,9 +117,9 @@ function setDistance(distance) {
 
 function estimateDistanceBetween(start, end) {
   if (start.key && start.key === end.key) return 0.7;
-  if (start.key === "town") return end.km || 0.7;
-  if (end.key === "town") return start.km || 0.7;
-  return Math.max(0.7, Math.hypot(start.x - end.x, start.y - end.y) * 0.0105 * 1.25);
+  if (start.key === "town" && end.km) return end.km;
+  if (end.key === "town" && start.km) return start.km;
+  return Math.hypot(start.x - end.x, start.y - end.y) * 0.0105 * 1.25;
 }
 
 function estimateLocalDistance() {
