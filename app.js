@@ -1,13 +1,22 @@
 const places = {
-  "antigonish town centre": { label: "Town Centre", key: "town", x: 350, y: 390, km: 0 },
-  "stfx university": { label: "StFX", key: "stfx", x: 550, y: 275, km: 3.1 },
-  "st. martha's regional hospital": { label: "St. Martha's", key: "hospital", x: 255, y: 331, km: 2.2 },
-  "antigonish mall": { label: "The Mall", key: "mall", x: 700, y: 446, km: 4.8 },
-  "antigonish market square": { label: "Market Square", key: "market", x: 366, y: 302, km: 1.7 },
-  "antigonish landing": { label: "Antigonish Landing", key: "landing", x: 157, y: 480, km: 4.1 },
-  "pomquet beach": { label: "Pomquet Beach", key: "pomquet", x: 784, y: 199, km: 18.5 },
-  "paqtnkek mi'kmaw nation": { label: "Paqtnkek", key: "paqtnkek", x: 118, y: 211, km: 11.2 },
-  "mcdonald's": { label: "McDonald's", key: "mcdonalds", x: 300, y: 430, km: 1.4 },
+  "antigonish town centre": { label: "Town Centre", key: "town", x: 483.8, y: 365.4, km: 0 },
+  "stfx university": { label: "StFX", key: "stfx", x: 470.3, y: 406.8, km: 0.9 },
+  "st. martha's regional hospital": { label: "St. Martha's", key: "hospital", x: 546.5, y: 296.1, km: 1.5 },
+  "antigonish mall": { label: "The Mall", key: "mall", x: 540.3, y: 416.4, km: 1.5 },
+  "antigonish market square": { label: "Market Square", key: "market", x: 537, y: 405.5, km: 1.4 },
+  "antigonish landing": { label: "Antigonish Landing", key: "landing", x: 663.8, y: 239.5, km: 3.1 },
+  "pomquet beach": { label: "Pomquet Beach", key: "pomquet", x: 1860.3, y: 110.7, km: 20 },
+  "paqtnkek mi'kmaw nation": { label: "Paqtnkek", key: "paqtnkek", x: 1871.4, y: 654.5, km: 18 },
+  "mcdonald's": { label: "McDonald's", key: "mcdonalds", x: 393.4, y: 430.1, km: 1.4 },
+};
+const mapPlaceValues = {
+  town: "Antigonish Town Centre",
+  stfx: "StFX University",
+  hospital: "St. Martha's Regional Hospital",
+  mall: "Antigonish Mall",
+  market: "Antigonish Market Square",
+  landing: "Antigonish Landing",
+  mcdonalds: "McDonald's, 37 James Street, Antigonish, Nova Scotia",
 };
 
 const pickupInput = document.querySelector("#pickup");
@@ -24,11 +33,11 @@ const friendPickupInput = document.querySelector("#friend-pickup");
 const friendNameInput = document.querySelector("#friend-name");
 const friendRouteSummary = document.querySelector("#friend-route-summary");
 const friendMapTarget = document.querySelector("#map-friend-target");
-const mapElement = document.querySelector("#google-map");
-const openMapElement = document.querySelector("#open-map");
 const localMapFallback = document.querySelector("#local-map-fallback");
 const localMapTargetLabel = document.querySelector("#local-map-target-label");
-const mapDisclaimer = document.querySelector("#map-disclaimer");
+const mapDrawing = document.querySelector("#local-map");
+const zoomMapInButton = document.querySelector("#zoom-map-in");
+const zoomMapOutButton = document.querySelector("#zoom-map-out");
 const mapDirectionsLink = document.querySelector("#map-directions-link");
 const mapPickInstruction = document.querySelector("#map-pick-instruction");
 const mapPlaceSelect = document.querySelector("#map-place-select");
@@ -44,24 +53,24 @@ const rideTypes = {
 let selectedRide = "neighbour";
 let pickupTime = null;
 let toastTimeout;
-let googleMap;
-let openMap;
-let openMapMarker;
-let openMapReady = false;
-let routeLibrary;
-let mapGeocoder;
-let activeRouteLine;
-let directionsTimeout;
-let routeRequestVersion = 0;
 let currentDistance = 3.1;
-let googleMapsReady = false;
 let mapSelectionTarget = "destination";
-let mapLookupVersion = 0;
+let mapView = { x: 0, y: 0, width: 900, height: 760 };
+let panStart = null;
+let suppressMapClick = false;
+const manualMapLocations = new WeakMap();
 let riderProfile = { name: "", email: "", phone: "", riderType: "Local rider" };
 let selectedMembership = "Community";
 
 function findPlace(value) {
-  return places[value.trim().toLocaleLowerCase()] ?? null;
+  const normalized = value.trim().toLocaleLowerCase();
+  if (normalized.includes("mcdonald")) return places["mcdonald's"];
+  return places[normalized] ?? null;
+}
+
+function getLocationForInput(input) {
+  const manualLocation = manualMapLocations.get(input);
+  return manualLocation?.value === input.value ? manualLocation : findPlace(input.value);
 }
 
 function estimateFare(type, distance) {
@@ -80,11 +89,9 @@ function formatPlace(value) {
   return place?.label ?? (value.trim() || "Choose a place");
 }
 
-function setDistance(distance, isGoogleRoute = false, duration = null) {
+function setDistance(distance) {
   currentDistance = distance;
-  document.querySelector("#trip-distance").textContent = isGoogleRoute
-    ? `${distance.toFixed(1)} km · ${duration}`
-    : `About ${distance.toFixed(1)} km`;
+  document.querySelector("#trip-distance").textContent = `About ${distance.toFixed(1)} km`;
   document.querySelector("#map-distance").textContent = `${distance.toFixed(1)} km`;
   Object.keys(rideTypes).forEach((type) => {
     document.querySelector(`#${type}-price`).textContent = `$${estimateFare(type, distance)}`;
@@ -92,18 +99,18 @@ function setDistance(distance, isGoogleRoute = false, duration = null) {
 }
 
 function estimateDistanceBetween(start, end) {
-  if (start.key === end.key) return 0.7;
+  if (start.key && start.key === end.key) return 0.7;
   if (start.key === "town") return end.km || 0.7;
   if (end.key === "town") return start.km || 0.7;
-  return Math.max(0.7, Math.abs(start.x - end.x) / 78 + Math.abs(start.y - end.y) / 80);
+  return Math.max(0.7, Math.hypot(start.x - end.x, start.y - end.y) * 0.0105 * 1.25);
 }
 
 function estimateLocalDistance() {
-  const pickup = findPlace(pickupInput.value);
-  const destination = findPlace(destinationInput.value);
+  const pickup = getLocationForInput(pickupInput);
+  const destination = getLocationForInput(destinationInput);
   if (!pickup || !destination) return 3.1;
   if (friendToggle.checked) {
-    const friendPickup = findPlace(friendPickupInput.value);
+    const friendPickup = getLocationForInput(friendPickupInput);
     if (!friendPickup) return 3.1;
     return estimateDistanceBetween(pickup, friendPickup) + estimateDistanceBetween(friendPickup, destination);
   }
@@ -122,23 +129,6 @@ function updateDirectionsLink() {
   mapDirectionsLink.href = url.toString();
 }
 
-function googleRouteAddress(value) {
-  const place = findPlace(value);
-  if (!place) return value.trim();
-  const googleNames = {
-    town: "Antigonish Town Centre, Antigonish, Nova Scotia",
-    stfx: "St. Francis Xavier University, Antigonish, Nova Scotia",
-    hospital: "St. Martha's Regional Hospital, Antigonish, Nova Scotia",
-    mall: "Antigonish Mall, Antigonish, Nova Scotia",
-    market: "Antigonish Market Square, Antigonish, Nova Scotia",
-    landing: "Antigonish Landing, Antigonish, Nova Scotia",
-    pomquet: "Pomquet Beach, Nova Scotia",
-    paqtnkek: "Paqtnkek Mi'kmaw Nation, Nova Scotia",
-    mcdonalds: "McDonald's, 37 James Street, Antigonish, Nova Scotia",
-  };
-  return googleNames[place.key] ?? value.trim();
-}
-
 function updateRoute() {
   document.querySelector("#route-origin-label").textContent = formatPlace(pickupInput.value);
   document.querySelector("#route-destination-label").textContent = formatPlace(destinationInput.value);
@@ -146,6 +136,7 @@ function updateRoute() {
   document.querySelector("#friend-route-label").textContent = formatPlace(friendPickupInput.value);
   setDistance(estimateLocalDistance());
   updateDirectionsLink();
+  updateLocalMapDrawing();
   document.querySelectorAll(".destination-chip").forEach((chip) => {
     chip.classList.toggle("selected", chip.dataset.place === destinationInput.value);
   });
@@ -157,10 +148,9 @@ function updateMapPickInstruction() {
     friend: "your friend's pickup",
     destination: "your drop-off",
   }[mapSelectionTarget] ?? "your drop-off";
-  const canClickMap = googleMapsReady || (openMapReady && localMapFallback.hidden);
-  mapPickInstruction.textContent = canClickMap
-    ? `Click the map or choose a place to set ${placeType}.`
-    : `Choose a listed local place to set ${placeType}.`;
+  mapPickInstruction.textContent = localMapFallback.hidden
+    ? `Click the map or choose a place below to set ${placeType}.`
+    : `Choose a local place to set ${placeType}.`;
   localMapTargetLabel.textContent = `Choose a local place to set ${placeType}. No map key or network lookup is needed.`;
 }
 
@@ -170,225 +160,195 @@ function getMapTargetInput(target) {
   return destinationInput;
 }
 
-function formatOpenMapResult(feature) {
-  const properties = feature?.properties ?? {};
-  const street = [properties.housenumber, properties.street].filter(Boolean).join(" ");
-  const parts = [
-    properties.name,
-    street,
-    properties.city ?? properties.town ?? properties.village,
-    properties.state,
-  ].filter(Boolean);
-  return [...new Set(parts)].join(", ");
-}
-
-function setSelectedMapLocation(target, address) {
+function setSelectedMapLocation(target, address, point = null) {
   const targetInput = getMapTargetInput(target);
   targetInput.value = address;
+  if (point) {
+    manualMapLocations.set(targetInput, {
+      ...point,
+      key: `map-pin-${point.x.toFixed(2)}-${point.y.toFixed(2)}`,
+      value: address,
+    });
+  } else {
+    manualMapLocations.delete(targetInput);
+  }
   updateRoute();
-  updateGoogleDirections();
+  localMapFallback.hidden = true;
   const placeType = target === "pickup" ? "Pickup" : target === "friend" ? "Friend's pickup" : "Drop-off";
-  const canClickMap = googleMapsReady || (openMapReady && localMapFallback.hidden);
-  mapPickInstruction.textContent = canClickMap
-    ? `${placeType} set · click the map to change`
-    : `${placeType} set · choose another local place`;
+  updateMapPickInstruction();
   showToast(`${placeType} set to ${address}.`);
 }
 
-function markOpenMapLocation(location, address) {
-  if (!openMap || !window.L) return;
-  if (openMapMarker) {
-    openMapMarker.setLatLng(location).bindPopup(address).openPopup();
-  } else {
-    openMapMarker = window.L.marker(location).addTo(openMap).bindPopup(address).openPopup();
-  }
-}
-
-function nearestOfflineMapPlace(location) {
-  const restaurant = { lat: 45.6153226, lng: -62.00255 };
-  const latMeters = (location.lat - restaurant.lat) * 111320;
-  const lngMeters = (location.lng - restaurant.lng) * 111320 * Math.cos(restaurant.lat * Math.PI / 180);
-  return Math.hypot(latMeters, lngMeters) <= 80
-    ? { address: "McDonald's, 37 James Street, Antigonish, Nova Scotia", location: restaurant }
-    : null;
-}
-
-async function selectLocationFromMap(location) {
-  if (!location || !mapGeocoder) return;
-  const target = mapSelectionTarget;
-  mapPickInstruction.textContent = "Looking up this location…";
-  try {
-    const { results } = await mapGeocoder.geocode({ location, region: "CA" });
-    const result = results?.[0];
-    if (!result?.formatted_address) {
-      showToast("Google Maps couldn't find an address at that point. Try another spot.");
-      updateMapPickInstruction();
+function updateLocalMapDrawing() {
+  const placeFor = getLocationForInput;
+  const markerPlaces = {
+    "#pickup-marker": placeFor(pickupInput),
+    "#destination-marker": placeFor(destinationInput),
+    "#friend-marker": friendToggle.checked ? placeFor(friendPickupInput) : null,
+  };
+  Object.entries(markerPlaces).forEach(([selector, place]) => {
+    const marker = mapDrawing.querySelector(selector);
+    if (!marker) return;
+    if (!place) {
+      marker.setAttribute("display", "none");
       return;
     }
-    setSelectedMapLocation(target, result.formatted_address);
-  } catch (error) {
-    console.error("Google Maps couldn't look up the selected map location.", error);
-    mapPickInstruction.textContent = "Couldn't find that location · try another spot";
-    showToast("Google Maps couldn't look up that point. Try another spot on the map.");
-  }
+    marker.removeAttribute("display");
+    marker.setAttribute("transform", `translate(${place.x} ${place.y})`);
+  });
+
+  const routePlaces = [
+    placeFor(pickupInput),
+    ...(friendToggle.checked ? [placeFor(friendPickupInput)] : []),
+    placeFor(destinationInput),
+  ].filter(Boolean);
+  const routePath = routePlaces.length > 1
+    ? routePlaces.map((place, index) => `${index ? "L" : "M"} ${place.x} ${place.y}`).join(" ")
+    : "";
+  mapDrawing.querySelector("#route-line").setAttribute("d", routePath);
+  mapDrawing.querySelector("#route-shadow").setAttribute("d", routePath);
 }
 
-async function selectLocationFromOpenMap(location) {
-  const requestVersion = ++mapLookupVersion;
-  const target = mapSelectionTarget;
-  mapPickInstruction.textContent = "Looking up the nearest mapped place…";
-  try {
-    const url = new URL("https://photon.komoot.io/reverse");
-    url.searchParams.set("lat", location.lat.toString());
-    url.searchParams.set("lon", location.lng.toString());
-    url.searchParams.set("lang", "en");
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`Place lookup failed with HTTP ${response.status}.`);
-    const data = await response.json();
-    if (requestVersion !== mapLookupVersion) return;
-    const feature = data.features?.[0];
-    const address = formatOpenMapResult(feature)
-      || `${location.lat.toFixed(5)}, ${location.lng.toFixed(5)}`;
-    setSelectedMapLocation(target, address);
-    markOpenMapLocation(location, address);
-  } catch (error) {
-    if (requestVersion !== mapLookupVersion) return;
-    console.error("ANTI-Walk couldn't look up the clicked map location.", error);
-    const localPlace = nearestOfflineMapPlace(location);
-    if (localPlace) {
-      setSelectedMapLocation(target, localPlace.address);
-      markOpenMapLocation(localPlace.location, localPlace.address);
-      return;
-    }
-    showLocalMapFallback("Map lookup is blocked · choose a local place below");
-    showToast("Map lookup is blocked. Choose a local place below to set your stop.");
-  }
-}
-
-function showLocalMapFallback(message) {
-  openMapElement.hidden = true;
+function showLocalMapFallback() {
   localMapFallback.hidden = false;
-  mapDisclaimer.textContent = message;
   updateMapPickInstruction();
 }
 
-function initializeOpenMap() {
-  if (!window.L) {
-    showLocalMapFallback("Map library is blocked · choose a local place below");
-    return;
-  }
-  try {
-    openMap = window.L.map(openMapElement).setView([45.6226, -61.998], 14);
-    const tileLayer = window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>',
-      maxZoom: 19,
-    });
-    let failedTiles = 0;
-    let loadedTiles = 0;
-    tileLayer.on("tileload", () => { loadedTiles += 1; });
-    tileLayer.on("tileerror", () => {
-      failedTiles += 1;
-      if (!googleMapsReady && failedTiles >= 3 && loadedTiles === 0) {
-        showLocalMapFallback("Map tile access is blocked · choose a local place below");
-      }
-    });
-    tileLayer.addTo(openMap);
-    openMap.on("click", (event) => selectLocationFromOpenMap(event.latlng));
-    openMapReady = true;
-    mapDisclaimer.textContent = "OpenStreetMap · click the map to set the selected stop";
-    updateMapPickInstruction();
-  } catch (error) {
-    console.error("ANTI-Walk couldn't initialize the no-key map.", error);
-    showLocalMapFallback("Map unavailable · choose a local place below");
-  }
+function constrainMapView() {
+  mapView.x = Math.min(900 - mapView.width, Math.max(0, mapView.x));
+  mapView.y = Math.min(760 - mapView.height, Math.max(0, mapView.y));
 }
 
-function updateGoogleDirections() {
-  if (!googleMapsReady) return;
-  clearTimeout(directionsTimeout);
-  const requestVersion = ++routeRequestVersion;
-  if (!pickupInput.value.trim() || !destinationInput.value.trim()
-    || (friendToggle.checked && !friendPickupInput.value.trim())) {
-    activeRouteLine?.setMap(null);
-    activeRouteLine = null;
-    if (friendToggle.checked && !friendPickupInput.value.trim()) {
-      mapDisclaimer.textContent = "Add your friend's pickup to preview the full route";
-    }
-    return;
-  }
-  directionsTimeout = setTimeout(async () => {
-    try {
-      const { routes } = await routeLibrary.Route.computeRoutes({
-        origin: googleRouteAddress(pickupInput.value),
-        ...(friendToggle.checked
-          ? { intermediates: [{ location: googleRouteAddress(friendPickupInput.value) }] }
-          : {}),
-        destination: googleRouteAddress(destinationInput.value),
-        travelMode: "DRIVING",
-        region: "CA",
-        fields: ["path", "distanceMeters", "durationMillis", "viewport"],
-      });
-      if (requestVersion !== routeRequestVersion) return;
-      if (!routes?.length || !routes[0].path?.length) throw new Error("No driving route was found.");
-      activeRouteLine?.setMap(null);
-      activeRouteLine = new google.maps.Polyline({
-        path: routes[0].path,
-        map: googleMap,
-        strokeColor: "#2e7955",
-        strokeWeight: 5,
-        strokeOpacity: 0.9,
-      });
-      if (routes[0].viewport) googleMap.fitBounds(routes[0].viewport, 48);
-      const distance = routes[0].distanceMeters;
-      if (distance > 0) {
-        const duration = `${Math.max(1, Math.round((routes[0].durationMillis ?? 0) / 60000))} min`;
-        setDistance(distance / 1000, true, duration);
-        mapDisclaimer.textContent = "Google Maps · driving route";
-      }
-    } catch (error) {
-      if (requestVersion !== routeRequestVersion) return;
-      activeRouteLine?.setMap(null);
-      mapDisclaimer.textContent = "Google Maps · route unavailable";
-      console.error("Google Maps could not calculate this route.", error);
-    }
-  }, 450);
+function applyMapView() {
+  constrainMapView();
+  mapDrawing.setAttribute("viewBox", `${mapView.x} ${mapView.y} ${mapView.width} ${mapView.height}`);
+  zoomMapInButton.disabled = mapView.width <= 450;
+  zoomMapOutButton.disabled = mapView.width >= 900;
 }
 
-window.initAntiWalkMap = async function initAntiWalkMap() {
-  try {
-    const [{ Map }, routes, geocoding] = await Promise.all([
-      google.maps.importLibrary("maps"),
-      google.maps.importLibrary("routes"),
-      google.maps.importLibrary("geocoding"),
-    ]);
-    routeLibrary = routes;
-    mapGeocoder = new geocoding.Geocoder();
-    mapElement.classList.add("ready");
-    openMapElement.hidden = true;
-    localMapFallback.hidden = true;
-    googleMap = new Map(mapElement, {
-      center: { lat: 45.6226, lng: -61.998 },
-      zoom: 14,
-      mapTypeControl: true,
-      streetViewControl: true,
-      fullscreenControl: true,
-      clickableIcons: true,
-      gestureHandling: "greedy",
-      mapTypeId: "roadmap",
+function zoomMap(factor, point = { x: 450, y: 380 }) {
+  const width = Math.min(900, Math.max(450, mapView.width * factor));
+  const scale = width / mapView.width;
+  const height = 760 * width / 900;
+  mapView = {
+    x: point.x - (point.x - mapView.x) * scale,
+    y: point.y - (point.y - mapView.y) * scale,
+    width,
+    height,
+  };
+  applyMapView();
+}
+
+function mapPointFromPointer(event) {
+  const rect = mapDrawing.getBoundingClientRect();
+  const scale = Math.max(rect.width / mapView.width, rect.height / mapView.height);
+  const visibleWidth = rect.width / scale;
+  const visibleHeight = rect.height / scale;
+  return {
+    x: mapView.x + (mapView.width - visibleWidth) / 2 + ((event.clientX - rect.left) / rect.width) * visibleWidth,
+    y: mapView.y + (mapView.height - visibleHeight) / 2 + ((event.clientY - rect.top) / rect.height) * visibleHeight,
+  };
+}
+
+function selectMapPlace(element) {
+  const placeKey = element.dataset.mapPlace;
+  const place = Object.values(places).find((candidate) => candidate.key === placeKey);
+  const inputValue = mapPlaceValues[placeKey];
+  if (!place || !inputValue) return;
+  setSelectedMapLocation(mapSelectionTarget, inputValue);
+}
+
+mapDrawing.querySelectorAll(".map-place[data-map-place]").forEach((element) => {
+  const placeKey = element.dataset.mapPlace;
+  const place = Object.values(places).find((candidate) => candidate.key === placeKey);
+  if (place) {
+    element.setAttribute("role", "button");
+    element.setAttribute("tabindex", "0");
+    element.setAttribute("aria-label", `Set ${place.label} as the selected stop`);
+    element.classList.add("map-place-selectable");
+    element.addEventListener("click", () => selectMapPlace(element));
+    element.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        selectMapPlace(element);
+      }
     });
-    googleMapsReady = true;
-    updateMapPickInstruction();
-    googleMap.addListener("click", (event) => selectLocationFromMap(event.latLng));
-    mapDisclaimer.textContent = "Google Maps · interactive driving route";
-    updateGoogleDirections();
-  } catch (error) {
-    mapElement.classList.remove("ready");
-    openMapElement.hidden = false;
-    mapDisclaimer.textContent = "Google Maps unavailable · OpenStreetMap is active";
-    console.error("Google Maps could not initialize.", error);
-    showToast("Google Maps couldn't start. The no-key OpenStreetMap is still available.");
   }
-};
+});
+
+mapDrawing.addEventListener("pointerdown", (event) => {
+  if (event.button !== 0 || event.target.closest(".map-place")) return;
+  const rect = mapDrawing.getBoundingClientRect();
+  panStart = {
+    x: event.clientX,
+    y: event.clientY,
+    view: { ...mapView },
+    width: rect.width,
+    height: rect.height,
+    moved: false,
+  };
+  mapDrawing.classList.add("is-panning");
+  mapDrawing.setPointerCapture(event.pointerId);
+});
+
+mapDrawing.addEventListener("pointermove", (event) => {
+  if (!panStart) return;
+  if (Math.hypot(event.clientX - panStart.x, event.clientY - panStart.y) > 4) panStart.moved = true;
+  const scale = Math.max(panStart.width / panStart.view.width, panStart.height / panStart.view.height);
+  mapView = {
+    ...panStart.view,
+    x: panStart.view.x - (event.clientX - panStart.x) / scale,
+    y: panStart.view.y - (event.clientY - panStart.y) / scale,
+  };
+  applyMapView();
+});
+
+function stopMapPan() {
+  suppressMapClick = Boolean(panStart?.moved);
+  panStart = null;
+  mapDrawing.classList.remove("is-panning");
+}
+
+mapDrawing.addEventListener("pointerup", stopMapPan);
+mapDrawing.addEventListener("pointercancel", stopMapPan);
+mapDrawing.addEventListener("wheel", (event) => {
+  event.preventDefault();
+  zoomMap(event.deltaY < 0 ? 0.85 : 1.18, mapPointFromPointer(event));
+}, { passive: false });
+
+mapDrawing.addEventListener("click", (event) => {
+  if (suppressMapClick) {
+    suppressMapClick = false;
+    return;
+  }
+  if (event.target.closest(".map-place, .map-decoration")) return;
+  const point = mapPointFromPointer(event);
+  if (point.x < 0 || point.x > 900 || point.y < 0 || point.y > 760) {
+    showToast("Choose a location within the Antigonish map area.");
+    return;
+  }
+  const nearestPlace = Object.values(places)
+    .filter((place) => place.x >= 0 && place.x <= 900 && place.y >= 0 && place.y <= 760)
+    .map((place) => ({ place, distance: Math.hypot(place.x - point.x, place.y - point.y) }))
+    .sort((a, b) => a.distance - b.distance)[0];
+  if (nearestPlace?.distance <= 18) {
+    const address = mapPlaceValues[nearestPlace.place.key];
+    if (address) {
+      setSelectedMapLocation(mapSelectionTarget, address);
+      return;
+    }
+  }
+  const latitude = 45.6555 - point.y / 760 * 0.071;
+  const longitude = -62.055 + point.x / 900 * 0.12;
+  setSelectedMapLocation(
+    mapSelectionTarget,
+    `Map pin (${latitude.toFixed(5)}, ${longitude.toFixed(5)})`,
+    point,
+  );
+});
+
+zoomMapInButton.addEventListener("click", () => zoomMap(0.8));
+zoomMapOutButton.addEventListener("click", () => zoomMap(1.25));
 
 function setMapSelectionTarget(target) {
   mapSelectionTarget = target;
@@ -405,7 +365,7 @@ document.querySelectorAll(".map-target-button").forEach((button) => {
 });
 
 document.querySelector("#choose-local-place").addEventListener("click", () => {
-  showLocalMapFallback("Local place picker · no map or network lookup needed");
+  showLocalMapFallback();
 });
 
 function selectListedPlace(place) {
@@ -482,27 +442,6 @@ userProfileForm.addEventListener("submit", (event) => {
   }
 });
 
-window.gm_authFailure = function gmAuthFailure() {
-  mapDisclaimer.textContent = "Google Maps key rejected · check key restrictions";
-  showToast("Google Maps rejected the API key. Check its website and API restrictions.");
-};
-
-function loadGoogleMaps() {
-  initializeOpenMap();
-  const key = window.GOOGLE_MAPS_API_KEY?.trim();
-  if (!key) {
-    return;
-  }
-  const script = document.createElement("script");
-  script.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(key)}&callback=initAntiWalkMap&v=weekly`;
-  script.async = true;
-  script.onerror = () => {
-    mapDisclaimer.textContent = "OpenStreetMap active · Google Maps couldn't load";
-    showToast("Google Maps couldn't load. The no-key OpenStreetMap is still available.");
-  };
-  document.head.append(script);
-}
-
 document.querySelectorAll(".ride-option").forEach((option) => {
   option.addEventListener("click", () => {
     selectedRide = option.dataset.ride;
@@ -518,20 +457,15 @@ document.querySelectorAll(".destination-chip").forEach((chip) => {
   chip.addEventListener("click", () => {
     destinationInput.value = chip.dataset.place;
     updateRoute();
-    updateGoogleDirections();
   });
 });
 
 pickupInput.addEventListener("input", updateRoute);
 destinationInput.addEventListener("input", updateRoute);
 friendPickupInput.addEventListener("input", updateRoute);
-pickupInput.addEventListener("change", updateGoogleDirections);
-destinationInput.addEventListener("change", updateGoogleDirections);
-friendPickupInput.addEventListener("change", updateGoogleDirections);
 document.querySelector("#swap-route").addEventListener("click", () => {
   [pickupInput.value, destinationInput.value] = [destinationInput.value, pickupInput.value];
   updateRoute();
-  updateGoogleDirections();
 });
 
 childToggle.addEventListener("change", () => {
@@ -557,7 +491,6 @@ friendToggle.addEventListener("change", () => {
   }
   updateRideRequestLabel();
   updateRoute();
-  updateGoogleDirections();
   if (friendToggle.checked) friendNameInput.focus();
 });
 
@@ -628,20 +561,13 @@ document.querySelectorAll(".plan-button").forEach((button) => {
 });
 
 document.querySelector("#center-map").addEventListener("click", () => {
-  if (googleMap) {
-    localMapFallback.hidden = true;
-    openMapElement.hidden = true;
-    googleMap.setCenter({ lat: 45.6226, lng: -61.998 });
-    googleMap.setZoom(14);
-  } else if (openMap) {
-    localMapFallback.hidden = true;
-    openMapElement.hidden = false;
-    openMap.invalidateSize();
-    openMap.setView([45.6226, -61.998], 14);
-  }
+  mapView = { x: 0, y: 0, width: 900, height: 760 };
+  applyMapView();
+  localMapFallback.hidden = true;
+  updateMapPickInstruction();
 });
 
 updateRoute();
+applyMapView();
 loadRiderProfile();
 renderRiderProfile();
-loadGoogleMaps();

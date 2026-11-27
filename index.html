@@ -15,7 +15,6 @@
       href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -253,7 +252,6 @@
             </div>
           </div>
           <div class="map-canvas" id="map-canvas">
-            <div id="open-map" class="open-map" aria-label="Interactive OpenStreetMap of Antigonish"></div>
             <div class="local-map-fallback" id="local-map-fallback" hidden>
               <div class="local-map-fallback-card">
                 <strong>Choose a local place</strong>
@@ -268,100 +266,79 @@
                 </div>
               </div>
             </div>
-            <div class="google-map" id="google-map" aria-label="Interactive Google Map"></div>
-            <svg class="map-drawing" viewBox="0 0 900 760" preserveAspectRatio="xMidYMid slice" role="img" aria-labelledby="map-title map-desc">
-              <title id="map-title">Illustrated map of Antigonish</title>
-              <desc id="map-desc">A stylized local map showing the route from Antigonish Town Centre to StFX University.</desc>
+            <svg class="map-drawing" id="local-map" viewBox="0 0 900 760" preserveAspectRatio="xMidYMid slice" role="group" aria-labelledby="map-title map-desc">
+              <title id="map-title">Street map of Antigonish, Nova Scotia</title>
+              <desc id="map-desc">A local map using OpenStreetMap roads, buildings, land cover, and waterways. Click a labeled place or any map position to set the selected stop; drag to pan and use the plus and minus buttons to zoom.</desc>
               <defs>
-                <pattern id="map-grid" width="38" height="38" patternUnits="userSpaceOnUse">
-                  <path d="M38 0H0V38" fill="none" stroke="#E3E8DE" stroke-width="1" />
-                </pattern>
                 <filter id="marker-shadow" x="-60%" y="-60%" width="220%" height="220%">
                   <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#254137" flood-opacity=".16" />
                 </filter>
               </defs>
-              <rect width="900" height="760" fill="#EEF1E8" />
-              <rect width="900" height="760" fill="url(#map-grid)" opacity=".74" />
-              <path d="M-20 142c104-49 140-4 208 36s137 25 218 51 115 79 207 64 154-61 313-20v173c-114-17-190 42-279 46s-157-46-239-22-149 81-256 35S42 478-20 526V142Z" fill="#DCEBE4" />
-              <path d="M-10 173c103-48 141 0 207 35 81 44 131 25 216 55 74 26 122 73 207 58 91-16 152-64 300-22" fill="none" stroke="#B8D7CA" stroke-width="2" />
-              <path d="M-44 604C74 537 159 583 236 524s115-107 199-111 118 46 202 20 135-106 308-85" fill="none" stroke="#FCFDF9" stroke-width="34" stroke-linecap="round" />
-              <path d="M-44 604C74 537 159 583 236 524s115-107 199-111 118 46 202 20 135-106 308-85" fill="none" stroke="#D5D9CC" stroke-width="2.5" stroke-dasharray="2 7" stroke-linecap="round" />
-              <path d="M80-22c45 132 89 190 139 284s39 169 111 258 104 127 129 267" fill="none" stroke="#FCFDF9" stroke-width="27" stroke-linecap="round" />
-              <path d="M80-22c45 132 89 190 139 284s39 169 111 258 104 127 129 267" fill="none" stroke="#D5D9CC" stroke-width="2" stroke-dasharray="2 7" stroke-linecap="round" />
-              <path d="M408-30c-19 104 11 158-15 249s-37 124 1 201 36 151-3 367" fill="none" stroke="#FCFDF9" stroke-width="29" stroke-linecap="round" />
-              <path d="M408-30c-19 104 11 158-15 249s-37 124 1 201 36 151-3 367" fill="none" stroke="#D5D9CC" stroke-width="2" stroke-dasharray="2 7" stroke-linecap="round" />
-              <path d="M652-20c-32 89-58 142-25 225s86 119 74 222-37 155-27 332" fill="none" stroke="#FCFDF9" stroke-width="25" stroke-linecap="round" />
-              <path d="M652-20c-32 89-58 142-25 225s86 119 74 222-37 155-27 332" fill="none" stroke="#D5D9CC" stroke-width="2" stroke-dasharray="2 7" stroke-linecap="round" />
-              <path d="M20 305c123-32 176-21 260 30s127 83 214 47 162-98 257-74 122 72 186 89" fill="none" stroke="#FCFDF9" stroke-width="23" stroke-linecap="round" />
-              <path d="M20 305c123-32 176-21 260 30s127 83 214 47 162-98 257-74 122 72 186 89" fill="none" stroke="#D5D9CC" stroke-width="2" stroke-dasharray="2 7" stroke-linecap="round" />
-              <path d="M594 444c32-42 85-46 118-11s34 80 7 110-79 45-117 12-37-74-8-111Z" fill="#D6E4C8" opacity=".9" />
-              <path d="M87 102c29-24 63-28 92-8s36 50 22 77-49 39-77 24-58-58-37-93Zm558 411c25-26 60-29 85-8s30 55 10 78-58 29-80 8-36-54-15-78Z" fill="#D8E9D1" opacity=".9" />
-              <g fill="#A3A996" font-family="DM Sans, sans-serif" font-size="12" font-weight="600" letter-spacing="2">
-                <text x="34" y="248" transform="rotate(-13 34 248)">MAIN STREET</text>
-                <text x="556" y="315" transform="rotate(15 556 315)">CHURCH STREET</text>
-                <text x="449" y="680" transform="rotate(-83 449 680)">WEST STREET</text>
-                <text x="668" y="162" transform="rotate(73 668 162)">UNIVERSITY AVE</text>
-                <text x="220" y="478" transform="rotate(-22 220 478)">HIGHWAY 104</text>
-              </g>
+              <image href="antigonish-map.svg" x="0" y="0" width="900" height="760" preserveAspectRatio="none" aria-hidden="true" />
               <g class="map-place" data-map-place="town">
-                <circle cx="350" cy="390" r="16" fill="#FCFDF9" />
-                <circle cx="350" cy="390" r="5" fill="#657A6C" />
-                <text x="371" y="394">TOWN CENTRE</text>
+                <circle cx="483.8" cy="365.4" r="16" fill="#FCFDF9" />
+                <circle cx="483.8" cy="365.4" r="5" fill="#657A6C" />
+                <text x="504.8" y="369.4">TOWN CENTRE</text>
               </g>
               <g class="map-place" data-map-place="stfx">
-                <circle cx="550" cy="275" r="23" fill="#DAE8D2" />
-                <path d="M550 261 554 272l11 3-11 3-4 11-4-11-11-3 11-3 4-11Z" fill="#426B4D" />
-                <text x="577" y="279">STFX UNIVERSITY</text>
+                <circle cx="470.3" cy="406.8" r="18" fill="#DAE8D2" />
+                <path d="M470.3 392.8 474.3 403.8l11 3-11 3-4 11-4-11-11-3 11-3 4-11Z" fill="#426B4D" />
+                <text x="444" y="410.8" text-anchor="end">STFX</text>
               </g>
               <g class="map-place" data-map-place="hospital">
-                <circle cx="255" cy="331" r="16" fill="#F8E8D8" />
-                <path d="M253 323h4v6h6v4h-6v6h-4v-6h-6v-4h6v-6Z" fill="#B56B3D" />
-                <text x="278" y="335">ST. MARTHA'S</text>
+                <circle cx="546.5" cy="296.1" r="16" fill="#F8E8D8" />
+                <path d="M544.5 288.1h4v6h6v4h-6v6h-4v-6h-6v-4h6v-6Z" fill="#B56B3D" />
+                <text x="569.5" y="300.1">ST. MARTHA'S</text>
+              </g>
+              <g class="map-place" data-map-place="mcdonalds">
+                <circle cx="393.4" cy="430.1" r="17" fill="#F8E8D8" />
+                <circle cx="393.4" cy="430.1" r="7" fill="#B56B3D" />
+                <circle cx="393.4" cy="430.1" r="2" fill="#FCFDF9" />
+                <text x="416.4" y="434.1">MCDONALD'S</text>
               </g>
               <g class="map-place" data-map-place="mall">
-                <circle cx="700" cy="446" r="16" fill="#E8E2D6" />
-                <path d="M692 438h16v16h-16z" fill="#7B6A53" opacity=".9" />
-                <path d="M696 442h3v3h-3zm5 0h3v3h-3zm-5 5h3v3h-3zm5 0h3v3h-3z" fill="#F5F6F1" />
-                <text x="723" y="450">ANTIGONISH MALL</text>
+                <circle cx="540.3" cy="416.4" r="10" fill="#E8E2D6" />
+                <path d="M535.3 411.4h10v10h-10z" fill="#7B6A53" opacity=".9" />
+                <path d="M537.8 413.9h2v2h-2zm3.5 0h2v2h-2zm-3.5 3.5h2v2h-2zm3.5 0h2v2h-2z" fill="#F5F6F1" />
+                <text x="566" y="440">ANTIGONISH MALL</text>
               </g>
               <g class="map-place" data-map-place="market">
-                <circle cx="366" cy="302" r="12" fill="#F5E9BF" />
-                <path d="M360 302h12v7h-12zM359 299h14l-2 3h-10l-2-3Z" fill="#947D38" />
-                <text x="384" y="306">MARKET SQUARE</text>
+                <circle cx="537" cy="405.5" r="9" fill="#F5E9BF" />
+                <path d="M532 405.5h10v5h-10zM531 403h12l-2 2.5h-8l-2-2.5Z" fill="#947D38" />
+                <text x="566" y="397">MARKET SQUARE</text>
               </g>
               <g class="map-place" data-map-place="landing">
-                <circle cx="157" cy="480" r="13" fill="#DAE8D2" />
-                <path d="M149 482c3-4 5-4 8 0s5 4 8 0" fill="none" stroke="#537A55" stroke-width="2" />
-                <text x="176" y="484">ANTIGONISH LANDING</text>
+                <circle cx="663.8" cy="239.5" r="13" fill="#DAE8D2" />
+                <path d="M655.8 241.5c3-4 5-4 8 0s5 4 8 0" fill="none" stroke="#537A55" stroke-width="2" />
+                <text x="682.8" y="243.5">ANTIGONISH LANDING</text>
               </g>
-              <g class="map-place" data-map-place="pomquet">
-                <circle cx="784" cy="199" r="14" fill="#D5E7E4" />
-                <path d="M775 199c3-4 6-4 9 0s6 4 9 0" fill="none" stroke="#52878A" stroke-width="2" />
-                <text x="804" y="203">POMQUET</text>
-              </g>
-              <g class="map-place" data-map-place="paqtnkek">
-                <circle cx="118" cy="211" r="14" fill="#E9E0D2" />
-                <path d="M111 211h14m-7-7v14" stroke="#806D50" stroke-width="2" />
-                <text x="139" y="215">PAQTNKEK</text>
-              </g>
-              <path id="route-shadow" d="M350 390 Q448 344 550 275" fill="none" stroke="#FAFCF7" stroke-width="13" stroke-linecap="round" />
-              <path id="route-line" d="M350 390 Q448 344 550 275" fill="none" stroke="#2E7955" stroke-width="5" stroke-linecap="round" stroke-dasharray="1 1" />
-              <g id="pickup-marker" class="map-marker" transform="translate(350 390)" filter="url(#marker-shadow)">
+              <path id="route-shadow" d="M483.8 365.4 L470.3 406.8" fill="none" stroke="#FAFCF7" stroke-width="13" stroke-linecap="round" />
+              <path id="route-line" d="M483.8 365.4 L470.3 406.8" fill="none" stroke="#2E7955" stroke-width="5" stroke-linecap="round" stroke-dasharray="7 7" />
+              <g id="pickup-marker" class="map-marker" transform="translate(483.8 365.4)" filter="url(#marker-shadow)">
                 <circle r="13" fill="#FCFDF9" />
                 <circle r="7" fill="#6C7E70" />
                 <circle r="2" fill="#FCFDF9" />
               </g>
-              <g id="destination-marker" class="map-marker" transform="translate(550 275)" filter="url(#marker-shadow)">
+              <g id="destination-marker" class="map-marker" transform="translate(470.3 406.8)" filter="url(#marker-shadow)">
                 <circle r="17" fill="#FCFDF9" />
                 <circle r="11" fill="#2E7955" />
-                <path d="m545 275 3.5 3.5 7-8" fill="none" stroke="#FCFDF9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="m-5 0 3.5 3.5 7-8" fill="none" stroke="#FCFDF9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
               </g>
-              <g transform="translate(778 35)">
+              <g id="friend-marker" class="map-marker" transform="translate(300 430)" filter="url(#marker-shadow)" display="none">
+                <circle r="15" fill="#FCFDF9" />
+                <circle r="9" fill="#C18A43" />
+                <text x="0" y="3" text-anchor="middle" fill="#FCFDF9" font-family="DM Sans,sans-serif" font-size="9" font-weight="700">F</text>
+              </g>
+              <g class="map-decoration" transform="translate(778 35)">
                 <circle cx="26" cy="26" r="25" fill="#FCFDF9" opacity=".9" />
                 <path d="m26 10 6 16-6-3-6 3 6-16Z" fill="#2E7955" />
                 <text x="26" y="45" text-anchor="middle" fill="#6C7E70" font-family="DM Sans,sans-serif" font-size="8" font-weight="700">N</text>
               </g>
             </svg>
+            <div class="map-zoom-controls" role="group" aria-label="Map zoom controls">
+              <button type="button" id="zoom-map-in" aria-label="Zoom in">+</button>
+              <button type="button" id="zoom-map-out" aria-label="Zoom out">−</button>
+            </div>
           </div>
           <div class="map-toolbar">
             <div class="map-pick-area">
@@ -371,7 +348,7 @@
                 <button type="button" class="map-target-button" id="map-friend-target" data-map-target="friend" aria-pressed="false" hidden>Friend</button>
                 <button type="button" class="map-target-button active" data-map-target="destination" aria-pressed="true">Drop-off</button>
               </div>
-              <label class="map-place-label" for="map-place-select">Click the map, or tap Places if it is blocked</label>
+              <label class="map-place-label" for="map-place-select">Click anywhere on the map or choose a place below</label>
               <select id="map-place-select" class="map-place-select" aria-label="Choose a nearby pickup or drop-off location">
                 <option value="">Select a place…</option>
                 <option value="McDonald's">McDonald's</option>
@@ -381,8 +358,6 @@
                 <option value="Antigonish Mall">Antigonish Mall</option>
                 <option value="Antigonish Market Square">Market Square</option>
                 <option value="Antigonish Landing">Antigonish Landing</option>
-                <option value="Pomquet Beach">Pomquet Beach</option>
-                <option value="Paqtnkek Mi'kmaw Nation">Paqtnkek</option>
               </select>
               <div class="map-pick-instruction" id="map-pick-instruction">Choose a place below to set the drop-off.</div>
             </div>
@@ -394,7 +369,9 @@
               <span class="summary-distance" id="map-distance">3.1 km</span>
             </div>
             <div class="map-footer-actions">
-              <div class="map-disclaimer" id="map-disclaimer">OpenStreetMap · click the map to set a stop</div>
+              <div class="map-disclaimer" id="map-disclaimer">
+                Data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a> · route illustrative
+              </div>
               <a class="map-directions-link" id="map-directions-link" href="https://www.google.com/maps/dir/?api=1&amp;origin=Antigonish%20Town%20Centre%2C%20Antigonish%2C%20NS&amp;destination=StFX%20University%2C%20Antigonish%2C%20NS&amp;travelmode=driving" target="_blank" rel="noopener noreferrer">Open directions ↗</a>
             </div>
           </div>
@@ -489,8 +466,6 @@
         <span>Community rides, a little closer to home. <a href="#membership">Membership</a> · <a href="driver.html">Drive with us</a></span>
       </footer>
     </div>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="maps-config.js"></script>
     <script src="app.js"></script>
   </body>
 </html>

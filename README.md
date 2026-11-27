@@ -5,35 +5,35 @@ A responsive front-end rideshare prototype for Antigonish, Nova Scotia.
 ## Run locally
 
 Serve this folder with a static web server (for example, VS Code Live Server) and
-open `index.html`. The interactive OpenStreetMap works without a key; the
-standalone `driver.html` page is linked from the ride-booking page.
+open `index.html`. The app and its interactive map work without a map API key,
+external map tiles, or geocoding service. The standalone `driver.html` page is
+linked from the ride-booking page.
 
-## Optional Google Maps mode
+## Map data
 
-By default, the app uses Leaflet with OpenStreetMap tiles and Photon reverse
-geocoding, so map taps select a location without a configured API key. To use
-the optional Google Maps JavaScript map and in-app driving routes instead:
+The bundled [Antigonish map](./antigonish-map.svg) uses OpenStreetMap road,
+building, land-cover, and waterway geometry for the town and nearby area
+(snapshot downloaded November 26, 2026). The data is bundled locally, so the map
+does not request external tiles or require a map API key. Attribution: ©
+[OpenStreetMap contributors](https://www.openstreetmap.org/copyright), available
+under the [Open Database License](https://opendatacommons.org/licenses/odbl/).
 
-1. Create a Google Cloud project, attach billing, and enable **Maps JavaScript
-   API**, **Routes API**, and **Geocoding API**.
-2. Create a browser API key. Restrict it to your local site origin (such as
-   `http://localhost:5500/*`) and restrict API access to those three APIs.
-3. Copy `maps-config.example.js` to `maps-config.js` and set
-   `window.GOOGLE_MAPS_API_KEY` in the local copy. The local file is git-ignored;
-   do not commit a real key.
-
-Google Maps Platform usage may incur charges. In the default no-key mode,
-clicking the map looks up the nearest mapped place/address through the public
-Photon service; the map tiles are from OpenStreetMap. Map-click coordinates are
-sent to Photon. Public map and geocoding services have usage limits and no
-availability guarantee. If they are blocked, use the **Places** button or the
-map-panel place picker; local choices such as McDonald's work without a network
-lookup. Google Maps mode uses the configured key for map taps and in-app driving
-routes. The app links to Google Maps for turn-by-turn directions in either mode.
+The map is centered on Antigonish; its street geometry and landmark positions
+come from the OpenStreetMap snapshot, which can have omissions or errors.
+To keep interaction responsive, the bundled map omits house-by-house footprints
+and minor paths, uses fewer labels, and draws roads with lighter line weights.
+Key Antigonish streets are labeled along their OpenStreetMap road geometry.
+Zooming and panning are constrained to the map's Antigonish bounds, so the map
+cannot be moved outside the area shown.
+Suggested destinations outside the town map area may be beyond the visible map.
+The dashed route line and fare/distance estimates are illustrative, not
+turn-by-turn routing or navigation guidance. The directions link opens Google
+Maps externally.
 
 ## Prototype features
 
-- Interactive OpenStreetMap with no-key click-to-set via Photon, plus the optional configured Google Maps mode
+- Responsive local street map with labeled landmark selection, pan, and bounded zoom
+- Clicking an unlabeled map position adds a coordinate pin without geocoding
 - Map-panel place picker includes McDonald's and can set pickup, friend pickup, or drop-off
 - Optional friend ride with an ordered pickup at your location, then your friend's, then the destination
 - Map-panel picker can set your pickup, friend pickup, or drop-off; the active-driver count is sample data
@@ -42,6 +42,10 @@ routes. The app links to Google Maps for turn-by-turn directions in either mode.
 - Community, Neighbour Plus, and Household concept membership options
 - Local rider profile saved in the current browser
 - ANTI-Walk driver signup page with live profile preview and local-only profile saving
+
+Clicking a labeled landmark or selecting a place in the picker sets the active
+stop. Clicking an unlabeled map area sets a coordinate pin; no address
+reverse-geocoding is used.
 
 This is a front-end concept only. It does not dispatch rides, verify drivers,
 process payments, activate memberships, or transmit booking/profile data. Plan
