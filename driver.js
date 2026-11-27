@@ -44,7 +44,7 @@ function updatePreview() {
     });
   } else {
     const tag = document.createElement("span");
-    tag.textContent = "New neighbour";
+    tag.textContent = "New driver";
     preferenceContainer.append(tag);
   }
 }

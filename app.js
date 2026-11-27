@@ -76,7 +76,7 @@ let panStart = null;
 let suppressMapClick = false;
 const manualMapLocations = new WeakMap();
 let riderProfile = { name: "", email: "", phone: "", riderType: "Local rider" };
-let selectedMembership = "Community";
+let selectedMembership = "Essential";
 
 function findPlace(value) {
   const normalized = value.trim().toLocaleLowerCase();
@@ -498,8 +498,13 @@ function loadRiderProfile() {
       phone: typeof profile.phone === "string" ? profile.phone : "",
       riderType: typeof profile.riderType === "string" ? profile.riderType : "Local rider",
     };
-    const membershipPlans = ["Community", "Neighbour Plus", "Household"];
-    selectedMembership = membershipPlans.includes(profile.membership) ? profile.membership : "Community";
+    const membershipPlans = ["Essential", "Ride Plus", "Household"];
+    const legacyMembershipNames = {
+      Community: "Essential",
+      "Neighbour Plus": "Ride Plus",
+    };
+    const savedMembership = legacyMembershipNames[profile.membership] ?? profile.membership;
+    selectedMembership = membershipPlans.includes(savedMembership) ? savedMembership : "Essential";
     document.querySelector("#rider-name").value = riderProfile.name;
     document.querySelector("#rider-email").value = riderProfile.email;
     document.querySelector("#rider-phone").value = riderProfile.phone;
