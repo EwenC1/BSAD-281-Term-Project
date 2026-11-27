@@ -64,9 +64,9 @@ Feature skipped or faked:             Why A Real Company Needs It:             H
                                       accuratly to generate revenue            to process payments for a monthly  
                                                                                subscription or transaction fee
 
-3. Live GPS to track Drivers          To keep track of drivers and             Ask the driver to share location 
-                                      get more accurate pick up/               the app so Anti-walk can access 
-                                      drop off times                           the live GPS
+3. Live GPS to track Drivers          To keep track of drivers and             Not difficult, but realativly
+                                      get more accurate pick up/               expensive. Google Maps Platform
+                                      drop off times                           charges a few hundred monthly
 
 4. Calculated pricing & Fees          To optimize revenue to the               Not hard, you just need to do some
                                       max point a customer is willing          basic precal or test the market to
