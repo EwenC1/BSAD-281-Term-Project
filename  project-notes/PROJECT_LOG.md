@@ -1,4 +1,7 @@
 # PROJECT LOG
+
+Ewen Cameron, ANTI-WALK, Link - https://cautious-broccoli-wv47r7ww99xx39qq-5504.app.github.dev/
+
 ### Session 1 -- Nov 25 -- driver: Ewen
 
 - Goal for this session: Develop the inital app
@@ -35,3 +38,8 @@ NOV 25    Clicking the Icons          I tried to get the AI to use a           I
           the travel details          maps, one that didnt require an API 
                                       to function. The map it tried to use 
                                       instead wouldn't load on the website
+
+### What A Real Company Needs
+Feature skipped or faked:             Why A Real Company Needs It:             How Hard/Expensive:
+
+### Reflection
