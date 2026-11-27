@@ -45,37 +45,22 @@
 - Committed? yes
 
 ## Things that broke
-Date       What Went Wrong:            What I tried:                            What Fixed it:
 
-1. NOV 25  Clicking the Icons          I tried to get the AI to use a           I asked the AI to reference
-           on the map didnt update     different map rather than Google         google maps to create its own
-           the travel details          maps, one that didnt require an API      map to Antigonish
-                                       to function. The map it tried to use 
-                                       instead wouldn't load on the website
+| Date | What went wrong | What I tried | What fixed it |
+|---|---|---|---|
+| Nov. 25 | Clicking the icons on the map didn't update the travel details. | I tried to get the AI to use a different map rather than Google Maps, one that didn't require an API to function. The map it tried to use instead wouldn't load on the website. | I asked the AI to reference Google Maps to create its own map of Antigonish. |
+| Nov. 26 | The corporate feel didn't come out how I wanted it to. | I asked it to tweak some aspects. | I asked Copilot for specific visual changes until the corporate feel was closer to what I wanted. |
+| Nov. 27 | When I was adding the more relevant highlighted locations, they were a different colour and style than the previously existing ones. | I tried to match the new locations to the existing ones. | I just made the new locations match the existing ones. |
 
 ## What A Real Company Needs
-Feature skipped or faked:             Why A Real Company Needs It:             How Hard/Expensive:
 
-1. Real number of active drivers      To show an accurate number of            Not difficult or expensive
-                                      active drivers to build                  you just need to track via
-                                      customer confidence                      app status
-
-2. Proper Payment Processing          To formally process payments             Not hard, pay a company ei Paypal
-                                      accuratly to generate revenue            to process payments for a monthly  
-                                                                               subscription or transaction fee
-
-3. Live GPS to track Drivers          To keep track of drivers and             Not difficult, but realativly
-                                      get more accurate pick up/               expensive. Google Maps Platform
-                                      drop off times                           charges a few hundred monthly
-
-4. Calculated pricing & Fees          To optimize revenue to the               Not hard, you just need to do some
-                                      max point a customer is willing          basic precal or test the market to
-                                      to pay                                   find the optimal pricing
-
-5. Database that stores driver info   Important to keep track of who           Not hard, pay a fee to rent a 
-                                      is working/representing your             server in the cloud to store
-                                      company. Especially if anything          your data.
-                                      goes wrong, ex, car accident
+| Feature skipped or faked | Why a real company needs it | How hard or expensive it is |
+|---|---|---|
+| Real number of active drivers | To show an accurate number of active drivers and build customer confidence. | Not difficult or expensive. You just need to track driver status through the app. |
+| Proper payment processing | To formally process payments accurately and generate revenue. | Not hard. Pay a company like PayPal to process payments for a monthly subscription or transaction fee. |
+| Live GPS to track drivers | To keep track of drivers and get more accurate pickup and drop-off times. | Not difficult, but relatively expensive. Google Maps Platform charges a few hundred dollars monthly. |
+| Calculated pricing and fees | To optimize revenue to the maximum point a customer is willing to pay. | Not hard. You just need to do some basic calculations or test the market to find the optimal pricing. |
+| Database that stores driver information | Important to keep track of who is working and representing the company, especially if anything goes wrong, like a car accident. | Not hard. Pay a fee to rent a server in the cloud to store the data. |
 
 ## Reflection
 1. What surprised you most about building software with AI?
