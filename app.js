@@ -2,8 +2,8 @@ const places = {
   "antigonish town centre": { label: "Town Centre", key: "town", x: 483.8, y: 365.4, km: 0 },
   "stfx university": { label: "StFX", key: "stfx", x: 470.3, y: 406.8, km: 0.9 },
   "st. martha's regional hospital": { label: "St. Martha's", key: "hospital", x: 546.5, y: 296.1, km: 1.5 },
-  "antigonish mall": { label: "The Mall", key: "mall", x: 540.3, y: 416.4, km: 1.5 },
-  "antigonish market square": { label: "Market Square", key: "market", x: 537, y: 405.5, km: 1.4 },
+  "antigonish mall": { label: "The Mall", key: "mall", x: 547.3, y: 422.4, km: 1.5 },
+  "antigonish market square": { label: "Market Square", key: "market", x: 528, y: 397.5, km: 1.4 },
   "antigonish landing": { label: "Antigonish Landing", key: "landing", x: 663.8, y: 259.5, km: 3.1 },
   "pomquet beach": { label: "Pomquet Beach", key: "pomquet", x: 1860.3, y: 110.7, km: 20 },
   "paqtnkek mi'kmaw nation": { label: "Paqtnkek", key: "paqtnkek", x: 1871.4, y: 654.5, km: 18 },
@@ -65,6 +65,7 @@ let toastTimeout;
 let currentDistance = 3.1;
 let mapSelectionTarget = "destination";
 let mapView = { x: 0, y: 0, width: 900, height: 760 };
+const minMapWidth = 112.5;
 let panStart = null;
 let suppressMapClick = false;
 const manualMapLocations = new WeakMap();
@@ -231,13 +232,13 @@ function constrainMapView() {
 function applyMapView() {
   constrainMapView();
   mapDrawing.setAttribute("viewBox", `${mapView.x} ${mapView.y} ${mapView.width} ${mapView.height}`);
-  zoomMapInButton.disabled = mapView.width <= 450;
+  zoomMapInButton.disabled = mapView.width <= minMapWidth;
   zoomMapOutButton.disabled = mapView.width >= 900;
   positionStJamesPopover();
 }
 
 function zoomMap(factor, point = { x: 450, y: 380 }) {
-  const width = Math.min(900, Math.max(450, mapView.width * factor));
+  const width = Math.min(900, Math.max(minMapWidth, mapView.width * factor));
   const scale = width / mapView.width;
   const height = 760 * width / 900;
   mapView = {
