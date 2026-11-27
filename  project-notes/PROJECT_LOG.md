@@ -78,3 +78,14 @@ Feature skipped or faked:             Why A Real Company Needs It:             H
                                       goes wrong, ex, car accident
 
 ## Reflection
+1. What surprised you most about building software with AI?
+
+The biggest surprise I encountered was how good Copilot is at entry-level coding. All the business podcasts and media I take in have mentioned how capable AI has become at coding. Additionally, I've heard a lot about how difficult it is becoming for recent computer science graduates to find entry-level jobs. I originally thought some of this was fearmongering, but this exercise has impressed me with what AI is capable of. To be clear, I don't know exactly what an entry-level coding position requires, but this experience does make me wonder how much a new graduate can do that AI can't. 
+
+2. Which parts were easy, and which were hard? Why do you think that is?
+
+The easiest part was generating the initial UI for the website. I asked Copilot for a modern, sleek-looking interface, and the first option it gave me was exactly what I was looking for. The hardest part was making the map look accurate and ensuring it had the proper functionality. I could get the map to look accurate using Google Maps, but the "Quick Click" feature wouldn't work. Other times, I would get the feature to work, but the map itself would display a large error code. Eventually, I got it working by asking the AI to generate its own map. I think this was more difficult because I was asking it to complete a more complex task that required more specific instructions than I was originally giving it.
+
+3. If a competitor had the same AI tool, how long would it take them to copy your site?
+
+If you gave them the right prompts to ask the AI, I don't think it would take more than twenty minutes. I spent a long time going back on decisions I made about the website, especially the map. I probably went through six or seven different variations of the map and its functionality before settling on what I wanted. If I were a competitor looking at what I created, I wouldn't be worried about not being able to replicate it. This made me realize that the website itself isn't what would make Anti-Walk difficult to compete with, but rather the relationships and networks I would have to build around it.
