@@ -86,6 +86,9 @@
                 </label>
                 <datalist id="local-places">
                   <option value="McDonald's"></option>
+                  <option value="Pita Pit"></option>
+                  <option value="A&W"></option>
+                  <option value="Subway"></option>
                   <option value="Antigonish Town Centre"></option>
                   <option value="StFX University"></option>
                   <option value="St. Martha's Regional Hospital"></option>
@@ -259,6 +262,9 @@
                 <p id="local-map-target-label">Choose a local place to set your selected stop. No map key is needed.</p>
                 <div class="local-map-places" role="group" aria-label="Choose a local place">
                   <button type="button" class="local-map-place" data-local-place="McDonald's">McDonald's</button>
+                  <button type="button" class="local-map-place" data-local-place="Pita Pit">Pita Pit</button>
+                  <button type="button" class="local-map-place" data-local-place="A&W">A&amp;W</button>
+                  <button type="button" class="local-map-place" data-local-place="Subway">Subway</button>
                   <button type="button" class="local-map-place" data-local-place="Antigonish Town Centre">Town Centre</button>
                   <button type="button" class="local-map-place" data-local-place="StFX University">StFX</button>
                   <button type="button" class="local-map-place" data-local-place="St. Martha's Regional Hospital">St. Martha's Hospital</button>
@@ -267,9 +273,18 @@
                 </div>
               </div>
             </div>
+            <div class="map-cluster-popover" id="st-james-cluster-popover" role="dialog" aria-label="Places near St. James Street" hidden>
+              <span class="map-cluster-title">ST. JAMES STREET</span>
+              <div class="map-cluster-options">
+                <button type="button" data-cluster-place="McDonald's"><span aria-hidden="true">M</span>McDonald's</button>
+                <button type="button" data-cluster-place="Pita Pit"><span aria-hidden="true">P</span>Pita Pit</button>
+                <button type="button" data-cluster-place="A&W"><span aria-hidden="true">A&amp;W</span>A&amp;W</button>
+                <button type="button" data-cluster-place="Subway"><span aria-hidden="true">S</span>Subway</button>
+              </div>
+            </div>
             <svg class="map-drawing" id="local-map" viewBox="0 0 900 760" preserveAspectRatio="xMidYMid slice" role="group" aria-labelledby="map-title map-desc">
               <title id="map-title">Street map of Antigonish, Nova Scotia</title>
-              <desc id="map-desc">A local map using OpenStreetMap roads, buildings, land cover, and waterways. Click a labeled place or any map position to set the selected stop; drag to pan and use the plus and minus buttons to zoom.</desc>
+              <desc id="map-desc">A local map using OpenStreetMap roads, buildings, land cover, and waterways. Hover or select the St. James Street marker to choose from nearby shops. Click a labeled place or any map position to set the selected stop; drag to pan and use the plus and minus buttons to zoom.</desc>
               <defs>
                 <filter id="marker-shadow" x="-60%" y="-60%" width="220%" height="220%">
                   <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#254137" flood-opacity=".16" />
@@ -291,27 +306,26 @@
                 <path d="M544.5 288.1h4v6h6v4h-6v6h-4v-6h-6v-4h6v-6Z" fill="#B56B3D" />
                 <text x="569.5" y="300.1">ST. MARTHA'S</text>
               </g>
-              <g class="map-place" data-map-place="mcdonalds">
+              <g class="map-place st-james-cluster" id="st-james-cluster" data-map-place="mcdonalds" tabindex="0" role="button" aria-haspopup="dialog" aria-controls="st-james-cluster-popover" aria-expanded="false" aria-label="Show places near St. James Street">
                 <circle cx="393.4" cy="430.1" r="17" fill="#F8E8D8" />
                 <circle cx="393.4" cy="430.1" r="7" fill="#B56B3D" />
                 <circle cx="393.4" cy="430.1" r="2" fill="#FCFDF9" />
-                <text x="416.4" y="434.1">MCDONALD'S</text>
+                <text x="416.4" y="434.1">ST. JAMES ST.</text>
               </g>
               <g class="map-place" data-map-place="mall">
-                <circle cx="540.3" cy="416.4" r="10" fill="#E8E2D6" />
-                <path d="M535.3 411.4h10v10h-10z" fill="#7B6A53" opacity=".9" />
-                <path d="M537.8 413.9h2v2h-2zm3.5 0h2v2h-2zm-3.5 3.5h2v2h-2zm3.5 0h2v2h-2z" fill="#F5F6F1" />
-                <text x="566" y="440">ANTIGONISH MALL</text>
+                <circle cx="547.3" cy="422.4" r="10" fill="#E8E2D6" />
+                <path d="M542.3 417.4h10v10h-10z" fill="#7B6A53" opacity=".9" />
+                <path d="M544.8 419.9h2v2h-2zm3.5 0h2v2h-2zm-3.5 3.5h2v2h-2zm3.5 0h2v2h-2z" fill="#F5F6F1" />
+                <text x="570" y="447">ANTIGONISH MALL</text>
               </g>
               <g class="map-place" data-map-place="market">
-                <circle cx="537" cy="405.5" r="9" fill="#F5E9BF" />
-                <path d="M532 405.5h10v5h-10zM531 403h12l-2 2.5h-8l-2-2.5Z" fill="#947D38" />
-                <text x="566" y="397">MARKET SQUARE</text>
+                <circle cx="528" cy="397.5" r="9" fill="#F5E9BF" />
+                <path d="M523 397.5h10v5h-10zM522 395h12l-2 2.5h-8l-2-2.5Z" fill="#947D38" />
+                <text x="550" y="386">MARKET SQUARE</text>
               </g>
               <g class="map-place" data-map-place="landing">
-                <circle cx="663.8" cy="239.5" r="13" fill="#DAE8D2" />
-                <path d="M655.8 241.5c3-4 5-4 8 0s5 4 8 0" fill="none" stroke="#537A55" stroke-width="2" />
-                <text x="682.8" y="243.5">ANTIGONISH LANDING</text>
+                <circle cx="663.8" cy="259.5" r="13" fill="#DAE8D2" />
+                <path d="M655.8 261.5c3-4 5-4 8 0s5 4 8 0" fill="none" stroke="#537A55" stroke-width="2" />
               </g>
               <path id="route-shadow" d="M483.8 365.4 L470.3 406.8" fill="none" stroke="#FAFCF7" stroke-width="13" stroke-linecap="round" />
               <path id="route-line" d="M483.8 365.4 L470.3 406.8" fill="none" stroke="#2E7955" stroke-width="5" stroke-linecap="round" stroke-dasharray="7 7" />
@@ -353,6 +367,9 @@
               <select id="map-place-select" class="map-place-select" aria-label="Choose a nearby pickup or drop-off location">
                 <option value="">Select a place…</option>
                 <option value="McDonald's">McDonald's</option>
+                <option value="Pita Pit">Pita Pit</option>
+                <option value="A&W">A&amp;W</option>
+                <option value="Subway">Subway</option>
                 <option value="Antigonish Town Centre">Town Centre</option>
                 <option value="StFX University">StFX University</option>
                 <option value="St. Martha's Regional Hospital">St. Martha's Hospital</option>

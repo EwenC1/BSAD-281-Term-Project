@@ -34,7 +34,8 @@ Maps externally.
 
 - Responsive local street map with labeled landmark selection, pan, and bounded zoom
 - Clicking an unlabeled map position adds a coordinate pin without geocoding
-- Map-panel place picker includes McDonald's and can set pickup, friend pickup, or drop-off
+- St. James Street map marker opens nearby McDonald's, Pita Pit, A&W, and Subway choices
+- Map-panel place picker can set pickup, friend pickup, or drop-off at local businesses and landmarks
 - Optional friend ride with an ordered pickup at your location, then your friend's, then the destination
 - Map-panel picker can set your pickup, friend pickup, or drop-off; the active-driver count is sample data
 - Antigonish pickup and drop-off suggestions, ride choices, and fare estimates

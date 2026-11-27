@@ -168,7 +168,39 @@ h1 span { color: #34383a; }
 .map-canvas { position: relative; min-height: 0; overflow: hidden; background: #efefea; }
 .map-drawing { width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; }
 .map-drawing.is-panning { cursor: grabbing; }
-.map-place text { fill: #666; font: 700 10px "DM Sans", sans-serif; letter-spacing: 1px; }
+.map-place text { fill: #555b5e; stroke: #f5f4ed; stroke-width: 3px; paint-order: stroke; stroke-linejoin: round; font: 700 10px "DM Sans", sans-serif; letter-spacing: 1px; }
+.st-james-cluster { cursor: pointer; }
+.st-james-cluster:hover circle:first-child { stroke: #555b5e; stroke-width: 2; }
+.map-cluster-popover {
+  position: absolute;
+  z-index: 8;
+  width: 190px;
+  padding: 10px;
+  border: 1px solid #d7d7d7;
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: 0 10px 28px rgba(52,56,58,.18);
+}
+.map-cluster-popover[hidden] { display: none; }
+.map-cluster-title { display: block; margin: 0 0 7px; color: #777; font-size: 8px; font-weight: 800; letter-spacing: 1px; }
+.map-cluster-options { display: grid; gap: 5px; }
+.map-cluster-options button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 7px;
+  border: 1px solid #e1e1e1;
+  border-radius: 3px;
+  background: #fff;
+  cursor: pointer;
+  text-align: left;
+  font-size: 9px;
+  font-weight: 700;
+}
+.map-cluster-options button:hover,
+.map-cluster-options button:focus-visible { border-color: #555b5e; background: #f4f4f4; outline: none; }
+.map-cluster-options button span { width: 24px; height: 24px; display: grid; flex: 0 0 auto; place-items: center; border-radius: 50%; color: #fff; background: #555b5e; font-size: 7px; }
 .map-marker { transition: transform .25s ease; }
 .map-zoom-controls { position: absolute; z-index: 3; top: 12px; right: 12px; display: grid; gap: 5px; }
 .map-zoom-controls button { width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid #ddd; border-radius: 3px; background: #fff; cursor: pointer; font-size: 20px; box-shadow: 0 2px 8px rgba(0,0,0,.08); }

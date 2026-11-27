@@ -4,10 +4,13 @@ const places = {
   "st. martha's regional hospital": { label: "St. Martha's", key: "hospital", x: 546.5, y: 296.1, km: 1.5 },
   "antigonish mall": { label: "The Mall", key: "mall", x: 540.3, y: 416.4, km: 1.5 },
   "antigonish market square": { label: "Market Square", key: "market", x: 537, y: 405.5, km: 1.4 },
-  "antigonish landing": { label: "Antigonish Landing", key: "landing", x: 663.8, y: 239.5, km: 3.1 },
+  "antigonish landing": { label: "Antigonish Landing", key: "landing", x: 663.8, y: 259.5, km: 3.1 },
   "pomquet beach": { label: "Pomquet Beach", key: "pomquet", x: 1860.3, y: 110.7, km: 20 },
   "paqtnkek mi'kmaw nation": { label: "Paqtnkek", key: "paqtnkek", x: 1871.4, y: 654.5, km: 18 },
   "mcdonald's": { label: "McDonald's", key: "mcdonalds", x: 393.4, y: 430.1, km: 1.4 },
+  "pita pit": { label: "Pita Pit", key: "pita-pit", x: 386, y: 433, km: 1.5 },
+  "subway": { label: "Subway", key: "subway", x: 382, y: 436, km: 1.6 },
+  "a&w": { label: "A&W", key: "a-and-w", x: 376, y: 440, km: 1.8 },
 };
 const mapPlaceValues = {
   town: "Antigonish Town Centre",
@@ -17,6 +20,9 @@ const mapPlaceValues = {
   market: "Antigonish Market Square",
   landing: "Antigonish Landing",
   mcdonalds: "McDonald's, 37 James Street, Antigonish, Nova Scotia",
+  "pita-pit": "Pita Pit, James Street, Antigonish, Nova Scotia",
+  subway: "Subway, 46 James Street, Antigonish, Nova Scotia",
+  "a-and-w": "A&W, 54 James Street, Antigonish, Nova Scotia",
 };
 
 const pickupInput = document.querySelector("#pickup");
@@ -41,6 +47,9 @@ const zoomMapOutButton = document.querySelector("#zoom-map-out");
 const mapDirectionsLink = document.querySelector("#map-directions-link");
 const mapPickInstruction = document.querySelector("#map-pick-instruction");
 const mapPlaceSelect = document.querySelector("#map-place-select");
+const stJamesCluster = document.querySelector("#st-james-cluster");
+const stJamesPopover = document.querySelector("#st-james-cluster-popover");
+const mapCanvas = document.querySelector("#map-canvas");
 const userProfileDialog = document.querySelector("#user-profile-dialog");
 const userProfileForm = document.querySelector("#user-profile-form");
 const userProfileKey = "anti-walk-rider-profile";
@@ -224,6 +233,7 @@ function applyMapView() {
   mapDrawing.setAttribute("viewBox", `${mapView.x} ${mapView.y} ${mapView.width} ${mapView.height}`);
   zoomMapInButton.disabled = mapView.width <= 450;
   zoomMapOutButton.disabled = mapView.width >= 900;
+  positionStJamesPopover();
 }
 
 function zoomMap(factor, point = { x: 450, y: 380 }) {
@@ -262,6 +272,7 @@ mapDrawing.querySelectorAll(".map-place[data-map-place]").forEach((element) => {
   const placeKey = element.dataset.mapPlace;
   const place = Object.values(places).find((candidate) => candidate.key === placeKey);
   if (place) {
+    if (element.classList.contains("st-james-cluster")) return;
     element.setAttribute("role", "button");
     element.setAttribute("tabindex", "0");
     element.setAttribute("aria-label", `Set ${place.label} as the selected stop`);
@@ -275,6 +286,80 @@ mapDrawing.querySelectorAll(".map-place[data-map-place]").forEach((element) => {
     });
   }
 });
+
+let stJamesHideTimer;
+
+function positionStJamesPopover() {
+  if (stJamesPopover.hidden) return;
+  const canvasRect = mapCanvas.getBoundingClientRect();
+  const clusterRect = stJamesCluster.getBoundingClientRect();
+  const popoverWidth = stJamesPopover.offsetWidth;
+  const popoverHeight = stJamesPopover.offsetHeight;
+  let left = clusterRect.right - canvasRect.left + 8;
+  let top = clusterRect.top - canvasRect.top - 8;
+
+  if (left + popoverWidth > canvasRect.width - 8) {
+    left = clusterRect.left - canvasRect.left - popoverWidth - 8;
+  }
+  left = Math.max(8, Math.min(left, canvasRect.width - popoverWidth - 8));
+  top = Math.max(8, Math.min(top, canvasRect.height - popoverHeight - 8));
+
+  stJamesPopover.style.left = `${left}px`;
+  stJamesPopover.style.top = `${top}px`;
+}
+
+function showStJamesPopover() {
+  clearTimeout(stJamesHideTimer);
+  stJamesPopover.hidden = false;
+  stJamesCluster.setAttribute("aria-expanded", "true");
+  positionStJamesPopover();
+}
+
+function hideStJamesPopover(delay = 180) {
+  clearTimeout(stJamesHideTimer);
+  stJamesHideTimer = setTimeout(() => {
+    stJamesPopover.hidden = true;
+    stJamesCluster.setAttribute("aria-expanded", "false");
+  }, delay);
+}
+
+stJamesCluster.addEventListener("mouseenter", showStJamesPopover);
+stJamesCluster.addEventListener("mouseleave", () => hideStJamesPopover());
+stJamesCluster.addEventListener("focus", showStJamesPopover);
+stJamesCluster.addEventListener("blur", (event) => {
+  if (!stJamesPopover.contains(event.relatedTarget)) hideStJamesPopover();
+});
+stJamesCluster.addEventListener("click", (event) => {
+  event.stopPropagation();
+  showStJamesPopover();
+});
+stJamesCluster.addEventListener("keydown", (event) => {
+  if (event.key === "Enter" || event.key === " ") {
+    event.preventDefault();
+    showStJamesPopover();
+    stJamesPopover.querySelector("button")?.focus();
+  }
+});
+
+stJamesPopover.addEventListener("mouseenter", () => clearTimeout(stJamesHideTimer));
+stJamesPopover.addEventListener("mouseleave", () => hideStJamesPopover());
+stJamesPopover.addEventListener("focusout", (event) => {
+  if (!stJamesPopover.contains(event.relatedTarget)) hideStJamesPopover();
+});
+stJamesPopover.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    hideStJamesPopover(0);
+    stJamesCluster.focus();
+  }
+});
+stJamesPopover.querySelectorAll("[data-cluster-place]").forEach((button) => {
+  button.addEventListener("click", () => {
+    selectListedPlace(button.dataset.clusterPlace);
+    hideStJamesPopover(0);
+  });
+});
+
+window.addEventListener("resize", positionStJamesPopover);
 
 mapDrawing.addEventListener("pointerdown", (event) => {
   if (event.button !== 0 || event.target.closest(".map-place")) return;
