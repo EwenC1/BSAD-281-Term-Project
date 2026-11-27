@@ -41,5 +41,10 @@ NOV 25    Clicking the Icons          I tried to get the AI to use a           I
 
 ### What A Real Company Needs
 Feature skipped or faked:             Why A Real Company Needs It:             How Hard/Expensive:
+Real number of active drivers
+Proper Payment Processing
+Live GPS to track Drivers
+Calculated pricing & Fees
+Database that stores driver info
 
 ### Reflection
